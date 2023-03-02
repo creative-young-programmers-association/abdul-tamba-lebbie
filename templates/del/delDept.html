@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}  
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <h4 class="fw-bold py-3 mb-4" style="text-align: center;"><span class="text-muted fw-light">Edit/Delete</span> Group</h4>
+
+  <div class="row">
+    <div class="col-xxl">
+      <div class="card mb-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <h2 class="mb-0">{% if departments %}Edit{% else %}Create{% endif %} departments</h2>
+        </div>
+        <div class="card-body">
+          {% if error_message %}
+          <div class="alert alert-danger">{{ error_message }}</div>
+          {% endif %}
+          
+          <form method="post">
+            {% csrf_token %}
+            
+            {% if departments %}
+              <input type="hidden" name="departments" value="{{ departments.id }}">
+            {% endif %}
+           
+            <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" class="form-control" id="name" name="name" {% if departments %}value="{{ departments.name }}"{% endif %} required>
+            </div>
+            <button type="submit" class="btn btn-primary">{% if departments %}Update{% else %}Create{% endif %} departments</button>
+          </form>
+          
+          {% if departments %}
+          <hr>
+          <form method="post" action="{% url 'del_Dept' departments.id %}" onsubmit="return confirm('Are you sure you want to delete this departments? This action cannot be undone.');">
+            {% csrf_token %}
+            <input type="hidden" name="group_id" value="{{ departments.id }}">
+            <button type="submit" class="btn btn-danger">Delete departments</button>
+          </form>
+          {% endif %}
+        
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>      
+{% endblock %}
+

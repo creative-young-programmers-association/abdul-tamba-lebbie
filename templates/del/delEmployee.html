@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}       
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <h4 class="fw-bold py-3 mb-4" style="text-align: center;"><span class="text-muted fw-light">Edit/Delete</span> Employee</h4>
+
+  <div class="row">
+    <div class="col-xxl">
+      <div class="card mb-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <h2 class="mb-0">{% if employee %}Edit{% else %}Create{% endif %} employee</h2>
+        </div>
+        <div class="card-body">
+          {% if error_message %}
+          <div class="alert alert-danger">{{ error_message }}</div>
+          {% endif %}
+          
+          <form method="post">
+            {% csrf_token %}
+            
+            {% if employee %}
+              <input type="hidden" name="employee" value="{{ employee.id }}">
+            {% endif %}
+           
+            <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" class="form-control" id="name" name="name" {% if employee %}value="{{ employee.name }}"{% endif %} required>
+              <label for="name">Employee ID:</label>
+              <input type="text" class="form-control" id="employee_id" name="employee_id" {% if employee %}value="{{ employee.employee_id }}"{% endif %} required>
+              <label for="name">Department:</label>
+              <input type="text" class="form-control" id="department" name="department" {% if employee %}value="{{ employee.department.name }}"{% endif %} required>
+              <label for="name">Position:</label>
+              <input type="text" class="form-control" id="position" name="position" {% if employee %}value="{{ employee.position }}"{% endif %} required>
+              <label for="name">Email:</label>
+              <input type="text" class="form-control" id="email" name="email" {% if employee %}value="{{ employee.email }}"{% endif %} required>
+              <label for="name">Phone Number:</label>
+              <input type="text" class="form-control" id="phone_number" name="phone_number" {% if employee %}value="{{ employee.phone_number }}"{% endif %} required>
+
+            </div>
+            <button type="submit" class="btn btn-primary">{% if employee %}Update{% else %}Create{% endif %} employee</button>
+          </form>
+          
+          {% if employee %}
+          <hr>
+          <form method="post" action="{% url 'del_Employee' employee.id %}" onsubmit="return confirm('Are you sure you want to delete this employee? This action cannot be undone.');">
+            {% csrf_token %}
+            <input type="hidden" name="group_id" value="{{ employee.id }}">
+            <button type="submit" class="btn btn-danger">Delete employee</button>
+          </form>
+          {% endif %}
+        
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>       
+{% endblock %}
+

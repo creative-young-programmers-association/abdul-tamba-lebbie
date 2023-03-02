@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Register Attendance</h4>
+        <form class="forms-sample" action="" method="POST">
+
+            {% csrf_token %}
+
+          <div class="form-group">
+            <label for="exampleInputName1">Employee</label>
+            {{attendanceform.employee}}
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail3">Date</label>
+            {{attendanceform.date}}
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword4">In-Time</label>
+            {{attendanceform.in_time}}
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword4">Out-Time</label>
+            {{attendanceform.out_time}}
+          </div>
+          <div class="form-group">
+            <label for="exampleSelectGender">Hours Worked</label>
+            {{attendanceform.total_hours_worked}}
+          </div>
+          
+          <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+          <button class="btn btn-light">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

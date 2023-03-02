@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="page-header">
+  <h3 class="page-title">
+    <span class="page-title-icon bg-gradient-primary text-white me-2">
+      <i class="mdi mdi-home"></i>
+    </span> Dashboard
+  </h3>
+  <nav aria-label="breadcrumb">
+    <ul class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">
+      </li>
+    </ul>
+  </nav>
+</div>
+<div class="row">
+  <div class="col-md-4 stretch-card grid-margin">
+    <div class="card bg-gradient-danger card-img-holder text-white">
+      <div class="card-body">
+        <img src="{% static 'assets/images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+        <h4 class="font-weight-normal mb-3">Total Employees <i class="mdi mdi-chart-line mdi-24px float-right"></i>
+        </h4>
+        <h2 class="mb-5">{{employee}}</h2>
+        <h6 class="card-text">In IMO Tech </h6>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 stretch-card grid-margin">
+    <div class="card bg-gradient-info card-img-holder text-white">
+      <div class="card-body">
+        <img src="{% static 'assets/images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+        <h4 class="font-weight-normal mb-3">Total Attendance<i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+        </h4>
+        <h2 class="mb-5">{{attendance}}</h2>
+        <h6 class="card-text"></h6>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 stretch-card grid-margin">
+    <div class="card bg-gradient-success card-img-holder text-white">
+      <div class="card-body">
+        <img src="{% static 'assets/images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+        <h4 class="font-weight-normal mb-3">total Departments<i class="mdi mdi-diamond mdi-24px float-right"></i>
+        </h4>
+        <h2 class="mb-5">{{department}}</h2>
+        <h6 class="card-text">Departments in IMO Tech</h6>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 grid-margin">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Recent DATA</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th> No </th>
+                <th> Employee </th>
+                <th> Date </th>
+                <th> Time-IN </th>
+                <th> Time-Out </th>
+                <th> Total_Hours_Worked </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for employees in recent_employees %}
+              <tr>
+                <td>
+                  {{ forloop.counter }}
+                </td>
+                <td> {{employees.employee}}</td>
+                <td> {{employees.date}}</td>
+                <td> {{employees.in_time}}</td>
+                <td> {{employees.out_time}}</td>
+                <td> {{employees.total_hours_worked}}</td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}
+

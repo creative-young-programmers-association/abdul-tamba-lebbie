@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div>
+      <i class="bi bi-printer"></i>
+      <a class="btn btn-info" href="{% url 'dept_pdf_view' %}" target="_blank">Print</a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">View Department</h4>
+      <p class="card-description"> View <code>.all department</code>
+      </p>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th> # </th>
+            <th> Department Name </th>
+            <th> View</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for dept in departments %}
+          <tr>
+            <td class="py-1">
+              {{ forloop.counter }}
+            </td>
+            <td> {{dept.name}} </td>
+            <td> <a class="badge badge-success" href="{% url 'viewDept' dept.id %}">
+              View</a>
+            </td>
+          </tr>
+          {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div>
+      <i class="bi bi-printer"></i>
+      <a class="btn btn-info" href="{% url 'employee_pdf_view'%}" target="_blank">Print</a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">View Employees Data</h4>
+      <p class="card-description"> View <code>.all employee data</code>
+      </p>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th> Employee ID</th>
+            <th> Name </th>
+            <th> Department </th>
+            <th> Position </th>
+            <th> Email </th>
+            <th> Phone Number </th>
+            <th> View</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {% for employee in employees %}
+            <tr>
+              <td> {{employee.employee_id}} </td>
+              <td>
+                {{employee.name}} 
+              </td>
+              <td> {{employee.department}}  </td>
+              <td> {{employee.position}}  </td>
+              <td> {{employee.email}}  </td>
+              <td> {{employee.phone_number}}  </td>
+              <td> <a class="badge badge-success" href="{% url 'viewEmployee' employee.id %}">
+                View</a>
+              </td>
+            </tr>
+          {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
