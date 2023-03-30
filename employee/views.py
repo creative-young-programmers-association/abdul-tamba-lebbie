@@ -20,6 +20,17 @@ from django.views.generic import View
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.cache import cache_control
+from django.contrib.auth.decorators import login_required
+
+
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from .forms import UpdateProfile
+
+
+@login_required(login_url='login')
 def Home(request):
 
     total_employees = Employee.objects.all()
@@ -36,27 +47,48 @@ def Home(request):
     
     return render(request, 'home.html', context)
 
-def addEmployee(request):
-    employeeform = EmployeeForm()
-    if request.method == 'POST':
+#@login_required(login_url='login')
+#def addEmployee(request):
+  #  employeeform = EmployeeForm()
+   # if request.method == 'POST':
       #print('Done POSTED:', request.POST)
-       employeeform = EmployeeForm(request.POST)
-       if employeeform.is_valid():
-            employeeform.save()
-            messages.success(request, 'Employee is successfully added.')
-            return redirect('employee_list')
-    else:
-        employeeform = EmployeeForm()
-    context = {'employeeform': employeeform }
+    #   employeeform = EmployeeForm(request.POST)
+     #  if employeeform.is_valid():
+     #       employeeform.save()
+     #       messages.success(request, 'Employee is successfully added.')
+      #      return redirect('employee_list')
+    #else:
+   #     employeeform = EmployeeForm()
+    #context = {'employeeform': employeeform }
 
     return render(request, 'add/addEmployee.html', context)
 
+@login_required(login_url='login')
+def addEmployee(request):
+    employeeform = EmployeeForm()
+    if request.method == 'POST':
+        employeeform = EmployeeForm(request.POST)
+        if employeeform.is_valid():
+            employeeform.save()
+            messages.success(request, 'Employee is successfully added.')
+            return redirect('employee_list')
+        else:
+            for field in employeeform:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+    context = {'employeeform': employeeform}
+    return render(request, 'add/addEmployee.html', context)
+
+
+
+@login_required(login_url='login')
 def employeeList(request):
     employees = Employee.objects.all()
 
     context = {'employees':employees}
     return render(request, 'view/viewEmployee.html', context)
 
+@login_required(login_url='login')
 def viewEmployee(request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
     if request.method == 'POST':
@@ -79,6 +111,7 @@ def viewEmployee(request, employee_id):
     }
     return render(request, 'del/delEmployee.html', context)
 
+@login_required(login_url='login')
 def del_Employee(request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
     if request.method == 'POST':
@@ -91,6 +124,7 @@ def del_Employee(request, employee_id):
     }
     return render(request, 'add/delete_Employee.html', context)
 
+@login_required(login_url='login')
 def render_to_pdf(template_src, context_dict={}):
 	template = get_template(template_src)
 	html  = template.render(context_dict)
@@ -101,6 +135,7 @@ def render_to_pdf(template_src, context_dict={}):
 	return None
 
 #Opens up page as PDF
+@login_required(login_url='login')
 class ViewEmployeePDF(View):
  def get(self, request, *args, **kwargs):
     employees = Employee.objects.all()
@@ -112,6 +147,7 @@ class ViewEmployeePDF(View):
     return HttpResponse(pdf, content_type='application/pdf')
 
 #Automaticly downloads to PDF file
+@login_required(login_url='login')
 class DownloadEmployeePDF(View):
     def get(self, request, *args, **kwargs):
         employees = Employee.objects.all()
@@ -127,6 +163,7 @@ class DownloadEmployeePDF(View):
         return response
 ########################### Attendance ######
 
+@login_required(login_url='login')
 def addAttendance(request):
     attendanceform = AttendanceForm()
     if request.method == 'POST':
@@ -137,16 +174,36 @@ def addAttendance(request):
             messages.success(request, 'Attendance is successfully added.')
             return redirect('attendance_list')
     else:
-        attendanceform = AttendanceForm()
+        for field in attendanceform:
+            for error in field.errors:
+                messages.error(request, f"{field.label}: {error}")
     context = {'attendanceform': attendanceform }
     return render(request, 'add/addAttendance.html', context)
 
+def addEmployee(request):
+    employeeform = EmployeeForm()
+    if request.method == 'POST':
+        employeeform = EmployeeForm(request.POST)
+        if employeeform.is_valid():
+            employeeform.save()
+            messages.success(request, 'Employee is successfully added.')
+            return redirect('employee_list')
+        else:
+            for field in employeeform:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+    context = {'employeeform': employeeform}
+    return render(request, 'add/addEmployee.html', context)
+
+
+@login_required(login_url='login')
 def attendanceList(request):
     attendances = Attendance.objects.all()
 
     context = {'attendances':attendances}
     return render(request, 'view/viewAttendance.html', context)
 
+@login_required(login_url='login')
 def del_Attendance(request, attendance_id):
     attendance = get_object_or_404(Attendance, id=attendance_id)
     if request.method == 'POST':
@@ -159,7 +216,8 @@ def del_Attendance(request, attendance_id):
     }
     return render(request, 'add/delete_Attendance.html', context)
 
-def viewAttendance(request, attendance_id):
+@login_required(login_url='login')
+def viewAttendancePDF(request, attendance_id):
     attendance = get_object_or_404(Attendance, id=attendance_id)
     if request.method == 'POST':
         # Process the form data and save the group
@@ -182,42 +240,7 @@ def viewAttendance(request, attendance_id):
     }
     return render(request, 'del/delAttendance.html', context)
 
-def render_to_pdf(template_src, context_dict={}):
-	template = get_template(template_src)
-	html  = template.render(context_dict)
-	result = BytesIO()
-	pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-	if not pdf.err:
-		return HttpResponse(result.getvalue(), content_type='application/pdf')
-	return None
-
-#Opens up page as PDF
-class ViewAttendancePDF(View):
- def get(self, request, *args, **kwargs):
-    attendances = Attendance.objects.all()
-    context  = {
-            'attendances': attendances,
-        }
-
-    pdf = render_to_pdf('report/print_attendance.html', context )
-    return HttpResponse(pdf, content_type='application/pdf')
-
-#Automaticly downloads to PDF file
-class DownloadAttendancePDF(View):
-    def get(self, request, *args, **kwargs):
-        attendances = Attendance.objects.all()
-        
-        context = {'attendances': attendances,}
-		
-        pdf = render_to_pdf('print_transaction.html', context )
-
-        response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "Invoice_%s.pdf" %("12341231")
-        content = "attachment; filename='%s'" %(filename)
-        response['Content-Disposition'] = content
-        return response
-
-
+@login_required(login_url='login')
 def addDepartment(request):
     departmentform = DepartmentForm()
     if request.method == 'POST':
@@ -232,12 +255,14 @@ def addDepartment(request):
     context = {'departmentform': departmentform }
     return render(request, 'add/addDept.html', context)
 
+@login_required(login_url='login')
 def departmentList(request):
     departments = Department.objects.all()
 
     context = {'departments':departments}
     return render(request, 'view/viewDepartment.html', context)
 
+@login_required(login_url='login')
 def viewDept(request, department_id):
     departments = get_object_or_404(Department, id=department_id)
     if request.method == 'POST':
@@ -251,6 +276,7 @@ def viewDept(request, department_id):
     return render(request, 'del/delDept.html', context)
 
 
+@login_required(login_url='login')
 def del_Dept(request, department_id):
     departments = get_object_or_404(Department, id=department_id)
     if request.method == 'POST':
@@ -263,6 +289,8 @@ def del_Dept(request, department_id):
     }
     return render(request, 'add/delete_Dept.html', context)
 
+
+@login_required(login_url='login')
 def render_to_pdf(template_src, context_dict={}):
 	template = get_template(template_src)
 	html  = template.render(context_dict)
@@ -273,6 +301,7 @@ def render_to_pdf(template_src, context_dict={}):
 	return None
 
 #Opens up page as PDF
+@login_required(login_url='login')
 class ViewDeptPDF(View):
  def get(self, request, *args, **kwargs):
     departments = Department.objects.all()
@@ -284,6 +313,7 @@ class ViewDeptPDF(View):
     return HttpResponse(pdf, content_type='application/pdf')
 
 #Automaticly downloads to PDF file
+@login_required(login_url='login')
 class DownloadDeptPDF(View):
     def get(self, request, *args, **kwargs):
         departments = Department.objects.all()
@@ -297,3 +327,65 @@ class DownloadDeptPDF(View):
         content = "attachment; filename='%s'" %(filename)
         response['Content-Disposition'] = content
         return response
+
+@login_required(login_url='login')
+def attendanceReport(request):
+    attendances = Attendance.objects.all()
+    return render(request, 'report/attendance.html', {'attendances': attendances})
+
+def loginPage(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            if user.is_superuser or user.groups.filter(name='admin').exists():
+                return redirect('admin:index')
+            else:
+                return redirect('Home')
+        else:
+            messages.error(request, 'Invalid username or password')
+
+    return render(request, 'registration/login.html')
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def logoutUser(request):
+    logout(request)
+    next_page = reverse('login')  # Assuming "login" is the name of your login URL pattern
+    response = redirect(next_page)
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
+
+
+@login_required(login_url='/employee/login/')
+def userSetting(request):
+    user = request.user
+    if request.method == 'POST':
+        form = UpdateProfile(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated!')
+            return redirect('userSetting')
+    else:
+        form = UpdateProfile(instance=user)
+    return render(request, 'userSetting.html', {'form': form})
+
+@login_required
+def password_reset(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'your password has been updated successfully')
+            return redirect('password_reset')
+            
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'password_reset.html', {'form': form})

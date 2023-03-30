@@ -1,6 +1,7 @@
 from django import forms
 
 from .models import *
+from accounts.models import User 
 
 
 class EmployeeForm(forms.ModelForm):
@@ -16,6 +17,9 @@ class EmployeeForm(forms.ModelForm):
         self.fields['position'].widget.attrs.update({'class': 'form-control'})
         self.fields['email'].widget.attrs.update({'class': 'form-control'})
         self.fields['phone_number'].widget.attrs.update({'class': 'form-control'})
+        self.fields['address'].widget.attrs.update({'class': 'form-control'})
+        self.fields['gender'].widget.attrs.update({'class': 'form-control'})
+        self.fields['marital_status'].widget.attrs.update({'class': 'form-control'})
        
 
 class AttendanceForm(forms.ModelForm):
@@ -43,3 +47,15 @@ class DepartmentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
        
+class UpdateProfile(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username','gender','address','telephone','profile_pic')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})
+        self.fields['address'].widget.attrs.update({'class': 'form-control'})
+        self.fields['telephone'].widget.attrs.update({'class': 'form-control'})
+        self.fields['gender'].widget.attrs.update({'class': 'form-control'})
+        self.fields['profile_pic'].widget.attrs.update({'class': 'form-control'})

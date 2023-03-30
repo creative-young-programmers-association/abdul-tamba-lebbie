@@ -5187,6 +5187,16 @@ textarea.form-control-lg {
     -ms-flex-pack: justify;
     justify-content: space-between; }
 
+/*.navbar-logo {
+  width : 250px;
+  height : 200px;
+  white-space: nowrap; } 
+
+.navbar-brand.brand-logo{
+    width : 250px !important;
+    height : 200px !important;
+  } */
+
 .navbar-brand {
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
@@ -13701,7 +13711,8 @@ dl {
     border-color: #ebedf2; }
 
 .auth .brand-logo {
-  margin-bottom: 2rem; }
+  margin-bottom: -1rem;
+  text-align: center; }
   .auth .brand-logo img {
     width: 150px; }
 

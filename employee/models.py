@@ -11,11 +11,23 @@ class Department(models.Model):
     
 class Employee(models.Model):
     name = models.CharField(max_length=255)
-    employee_id = models.CharField(max_length=255)
+    employee_id = models.CharField(max_length=255, unique=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
     position = models.CharField(max_length=255)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    marital_status = models.CharField(max_length=1, choices=[
+        ('M', 'Marriage'),
+        ('S', 'Single'),
+        ('D', 'Divorced'),
+        ('W', 'Widowed'),
+    ])
+    gender = models.CharField(max_length=1, choices=[
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    ])
 
     def __str__(self):
         return self.name

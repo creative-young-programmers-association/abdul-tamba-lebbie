@@ -15,9 +15,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
+
+from employee import views
+
+from django.conf.urls.static import static
+from django.conf import settings
+
+admin.site.login = views.loginPage # Set the custom login view for the AdminSite
+
 
 urlpatterns = [
+    url(r'^admin/login/$', views.loginPage, name='admin_login'), # Use the custom login view for the admin login URL
+    url(r'^admin/', admin.site.urls),
     path('admin/', admin.site.urls),
 
     path('', include('employee.urls')),
+
+    path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+
+

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+  
+  {% if messages %}
+    <div class="alert alert-success messages">
+        {% for message in messages %}
+            <p {% if message.tags %} class="{{ message.tags }}"{% endif %}><strong>{{ message }}</strong></p>
+        {% endfor %}
+    </div>
+  {% endif %}
+
+  <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">User Account / <span>Setting</span> </h4>
+
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-pills flex-column flex-md-row mb-3">
+        <li class="nav-item">
+          <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-user me-1"></i> Account</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'password_reset' %}"
+            ><i class="bx bx-bell me-1"></i> Password Reset</a
+          >
+        </li>
+      </ul>
+      <div class="card mb-4">
+        <h5 class="card-header">Profile Details</h5>
+        <!-- Account -->
+        <div class="card-body">
+          <div class="d-flex align-items-start align-items-sm-center gap-4">
+            <img src="{{ request.user.profile_pic.url }}" alt="image" width="100" height="100" />
+            
+          </div>
+        </div>
+        <hr class="my-0" />
+        <div class="card-body">
+          <form action="" method="POST" enctype="multipart/form-data">
+           
+            {% csrf_token %}
+
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label for="firstName" class="form-label">Full Name</label>
+                {{form.username}}
+              </div>
+              <div class="mb-3 col-md-6">
+                <label for="lastName" class="form-label">Address</label>
+                {{form.address}}
+              </div>
+              <div class="mb-3 col-md-6">
+                <label for="email" class="form-label">Phone Number</label>
+                {{form.telephone}}
+              </div>
+              <div class="mb-3 col-md-6">
+                <label for="organization" class="form-label">Gender</label>
+                {{form.gender}}
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label" for="phoneNumber">Profile Picture</label>
+                  {{form.profile_pic}}
+              </div>
+            </div>
+            <div class="mt-2">
+              <button type="submit" class="btn btn-primary me-2">Save changes</button>
+              <button type="reset" class="btn btn-light">Cancel</button>
+            </div>
+          </form>
+        </div>
+        <!-- /Account -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+

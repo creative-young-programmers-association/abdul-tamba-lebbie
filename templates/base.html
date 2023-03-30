@@ -20,11 +20,73 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css ' %}">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico ' %}" />
+
+    <!--NEW -->
+    <link rel="stylesheet" href="//g.tutorialjinni.com/mojoaxel/bootstrap-select-country/dist/css/bootstrap-select-country.min.css" />
+
+    <!-- Aweasome Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+    <!-- Datatable Css -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.css"/>
+
+    <!--The icons for the report field -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@4.3.1/font/bootstrap-icons.css">
+    {% block extra_css %}
+    {% endblock %}
   </head>
   <body>
     <div class="container-scroller">
       
-      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+          <img src="{% static 'assets/images/IMO-Logo.svg' %}" alt="logo" width="250" height="100" />
+          <a class="navbar-brand brand-logo-mini" href="{% url 'Home' %}"><img src="{% static 'assets/images/IMO-Logo.svg' %}" alt="logo" /></a>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          {% block search %} 
+
+          {% endblock %} 
+
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-profile dropdown">
+              <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="nav-profile-img">
+                  <img src="{{ request.user.profile_pic.url }}" alt="image">
+                  <span class="availability-status online"></span>
+                </div>
+                <div class="nav-profile-text">
+                  <p class="mb-1 text-black">{{request.user.username}}</p>
+                </div>
+              </a>
+              <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'userSetting' %}">
+                  <i class="mdi mdi-logout me-2 text-primary"></i> Account Setting </a>
+              </div>
+            </li>
+            <li class="nav-item d-none d-lg-block full-screen-link">
+              <a class="nav-link">
+                <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
+              </a>
+            </li>
+            <li class="nav-item nav-logout d-none d-lg-block">
+              <a class="nav-link" href="{% url 'logout' %}">
+                <i class="mdi mdi-power"></i>
+              </a>
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial:partials/_navbar.html --
       <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
@@ -33,16 +95,17 @@
           </button>
          
         </div>
-      </nav>
+      </nav> -->
+
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_sidebar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
           <ul class="nav">
             <li class="nav-item nav-profile">
-              <a href="#" class="nav-link">
+              <a href="{% url 'userSetting' %}" class="nav-link">
                 <div class="nav-profile-image">
-                
+                  <img src="{{ request.user.profile_pic.url }}" alt="image">
                   <span class="login-status online"></span>
                   <!--change to offline or busy as needed-->
                 </div>
@@ -131,5 +194,112 @@
     <script src="{% static 'assets/js/dashboard.js ' %}"></script>
     <script src="{% static 'assets/js/todolist.js ' %}"></script>
     <!-- End custom js for this page -->
+
+     <!-- Place this tag in your head or just before your close body tag. -->
+     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    
+     <!-- jQuery page -->
+     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+ 
+     <!-- Datatables Js -->
+       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+       <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.js"></script>
+     <!-- End custom js for this page -->
+
+    <!-- Dataset Query -->
+
+    <script>
+      $("#example").DataTable({
+        // Datatables configuration 
+        paging: true,
+        pageLength: 10,
+        lengthChange: true,
+        autoWidth: true,
+        searching: true,
+        bInfo: true,
+        bSort: true,
+
+        // BUTTONS 
+
+        // COPY
+        dom: 'lBfrtip',
+        buttons: [
+          {
+            extend: 'copy',
+            text: '<i class="fas fa-clone"></i>',
+            className: 'btn btn-secondary',
+            titleAttr: 'Copy',
+          },
+          
+          // EXCELL
+          {
+            extend: 'excel',
+            text: '<i class="fas fa-file-excel"></i>',
+            className: 'btn btn-secondary',
+            titleAttr: 'excel',
+          },
+
+          // PRINT
+          {
+            extend: 'print',
+            text: '<i class="fas fa-print"></i>',
+            className: 'btn btn-secondary',
+            titleAttr: 'Print',
+            header: function() {
+              return '<div><h1>Custom Header</h1></div>';
+            },
+            customize: function ( win ) {
+              $(win.document.body).css('font-size', '10pt')
+              $(win.document.body).find('table')
+                .addClass('compact')
+                .css('font-size', 'inherit'); 
+            }
+          },
+          // PDF
+          {
+            extend: 'pdf',
+            text: '<i class="fas fa-file-pdf"></i>',
+            className: 'btn btn-secondary',
+            titleAttr: 'pdf',
+
+            //Center the table 
+            tableHeader: {
+              alignment : 'center'
+            },
+            //Font size and optimization
+            customize: function (doc) {
+              //doc.styles.tableHeader.alignment = 'center'; // Header Position
+              //doc.styles.tableBodyOdd.alignment = 'center'; // Body Position
+              //doc.styles.tableBodyEven.alignment = 'center'; // Header Position
+              doc.styles.tableHeader.fontSize = 7; // Header font-size
+              doc.defaultStyle.fontSize = 6; // Body font-size
+
+              // To get 100% width of the table
+              doc.content[1].table.widths = Array(doc.content[1].table.body[1].length + 1).join('*').split('');
+
+              // Add custom header
+              var header = $('<div>').addClass('text-center');
+              header.append($('<img>').attr('src', 'path/to/header/logo.png').addClass('img-fluid mb-3'));
+              header.append($('<h3>').text('Custom Header').addClass('mb-0'));
+              doc.content.splice(0, 0, header.get(0));
+            } 
+          },
+          // Font size (when export to print)
+          
+        ]
+        // Disable colums with specific filter 
+        //"columnDefs": [{
+        //    "targets": [5,6,7,8],
+        //    "orderable": false
+       // }]
+      });
+
+      // Enable Searchbox Outside
+      var newSearch = $("#example").DataTable();
+      $('#search').keyup(function() {
+        newSearch.search($(this).val()).draw();
+      }) 
+    </script>
   </body>
 </html>

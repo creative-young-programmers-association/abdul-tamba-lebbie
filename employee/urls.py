@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-from .views import ViewAttendancePDF, ViewDeptPDF, ViewEmployeePDF
+from .views import  ViewDeptPDF, ViewEmployeePDF
 
 urlpatterns = [
     path('', views.Home, name='Home'),
@@ -33,19 +33,29 @@ urlpatterns = [
 
     path('employee/<str:employee_id>/view/', views.viewEmployee, name='viewEmployee'),
 
-    path('attendance/<str:attendance_id>/view/', views.viewAttendance, name='viewAttendance'),
+    path('attendance/<str:attendance_id>/view/', views.viewAttendancePDF, name='viewAttendance'),
     
     ############PRINT OUT #####################
 
-    path('attendance_pdf_view/', ViewAttendancePDF.as_view(), name="attendance_pdf_view"),
-    path('attendance_pdf_download/', views.DownloadAttendancePDF, name="attendance_pdf_download"),
+    path('attendance_pdf_view/', views.viewAttendancePDF, name="attendance_pdf_view"),
 
-    path('dept_pdf_view/', ViewDeptPDF.as_view(), name="dept_pdf_view"),
-    path('download_pdf_download/', views.DownloadDeptPDF, name="download_pdf_download"),
+    #path('dept_pdf_view/', ViewDeptPDF.as_view(), name="dept_pdf_view"),
+    #path('download_pdf_download/', views.DownloadDeptPDF, name="download_pdf_download"),
 
-    path('dept_pdf_view/', ViewDeptPDF.as_view(), name="dept_pdf_view"),
-    path('download_pdf_download/', views.DownloadDeptPDF, name="download_pdf_download"),
+    #path('dept_pdf_view/', ViewDeptPDF.as_view(), name="dept_pdf_view"),
+    #path('download_pdf_download/', views.DownloadDeptPDF, name="download_pdf_download"),
 
-    path('employee_pdf_view/', ViewEmployeePDF.as_view(), name="employee_pdf_view"),
-    path('download_pdf_download/', views.DownloadEmployeePDF, name="download_pdf_download"),
+    #path('employee_pdf_view/', ViewEmployeePDF.as_view(), name="employee_pdf_view"),
+    #path('download_pdf_download/', views.DownloadEmployeePDF, name="download_pdf_download"),
+
+    path('attendanceReport/', views.attendanceReport, name="attendanceReport"),
+
+    path('login/', views.loginPage, name="login"),
+    path('logout/', views.logoutUser, name="logout"),
+
+    path('userSetting/', views.userSetting, name="userSetting"),
+
+    path('password_reset/', views.password_reset, name="password_reset"),
+
 ]
+

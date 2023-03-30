@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
 
     'employee', #new
     'attendance',
+    'accounts',
 
 ]
 
@@ -117,6 +119,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATE_INPUT_FORMATS = ['%Y-%m-%d']
+DATETIME_INPUT_FORMATS = ['%Y-%m-%d %H:%M:%S']
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -126,4 +131,25 @@ STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))] # new
 STATIC_ROOT = STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
 STATICFILES_STORAGE ='django.contrib.staticfiles.storage.StaticFilesStorage' # new
 
+
+AUTH_USER_MODEL = 'accounts.User' # new
+
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+MEDIA_URL = '/images/'
+MEDIA_ROOT = str(BASE_DIR.joinpath ('static/images/'))
+
+
+#Jazzmin 
+
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "IMO Portal Admin",
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "Admin Panel",
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "Attendance",
+}
+
+LOGIN_URL = '/employee/login'
+LOGOUT_REDIRECT_URL = '/'
