@@ -1,0 +1,28 @@
+@media print {
+  .custom-header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+
+  .custom-header p {
+    margin-bottom: 5px;
+  }
+
+  .custom-header img {
+    margin-bottom: 10px;
+  }
+
+  .table-responsive {
+    margin-bottom: 30px;
+  }
+  .custom-header .col-md-8 p {
+    margin-bottom: 0;
+    text-align: right;
+    line-height: 1cm;
+  }
+  .custom-header .col-md-8 p i {
+    margin-right: 5px;
+  }
+}

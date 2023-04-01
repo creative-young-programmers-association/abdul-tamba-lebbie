@@ -6,10 +6,19 @@
 
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
-    <div>
-      <i class="bi bi-printer"></i>
-      <a class="btn btn-info" href="#" target="_blank">Print</a>
+
+    <div class="d-flex justify-content-between">
+      <div>
+        <i class="bi bi-printer"></i>
+        <a class="btn btn-info" href="{% url 'department_pdf_view'%}" target="_blank">Print</a>
+      </div>
+  
+      <div class="ml-auto">
+        <i class="bi bi-printer"></i>
+        <a class="btn btn-info" href="{% url 'add_department'%}">Add</a>
+      </div>
     </div>
+
     <div class="card-body">
       <h4 class="card-title">View Department</h4>
       <p class="card-description"> View <code>.all department</code>

@@ -4,6 +4,8 @@ from django.urls import reverse
 from .forms import *
 from .models import Employee
 
+from .models import *
+
 from django.http import HttpResponseRedirect
 
 from django.contrib import messages
@@ -28,6 +30,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from .forms import UpdateProfile
+
 
 
 @login_required(login_url='login')
@@ -124,43 +127,6 @@ def del_Employee(request, employee_id):
     }
     return render(request, 'add/delete_Employee.html', context)
 
-@login_required(login_url='login')
-def render_to_pdf(template_src, context_dict={}):
-	template = get_template(template_src)
-	html  = template.render(context_dict)
-	result = BytesIO()
-	pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-	if not pdf.err:
-		return HttpResponse(result.getvalue(), content_type='application/pdf')
-	return None
-
-#Opens up page as PDF
-@login_required(login_url='login')
-class ViewEmployeePDF(View):
- def get(self, request, *args, **kwargs):
-    employees = Employee.objects.all()
-    context  = {
-            'employees': employees,
-        }
-
-    pdf = render_to_pdf('report/print_employee.html', context )
-    return HttpResponse(pdf, content_type='application/pdf')
-
-#Automaticly downloads to PDF file
-@login_required(login_url='login')
-class DownloadEmployeePDF(View):
-    def get(self, request, *args, **kwargs):
-        employees = Employee.objects.all()
-        
-        context = {'employees': employees,}
-		
-        pdf = render_to_pdf('print_transaction.html', context )
-
-        response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "Invoice_%s.pdf" %("12341231")
-        content = "attachment; filename='%s'" %(filename)
-        response['Content-Disposition'] = content
-        return response
 ########################### Attendance ######
 
 @login_required(login_url='login')
@@ -268,6 +234,7 @@ def viewDept(request, department_id):
     if request.method == 'POST':
         # Delete the group
         departments.name = request.POST['name']
+        departments.save()
         return HttpResponseRedirect(reverse('department_list'))
 
     context = {
@@ -289,49 +256,10 @@ def del_Dept(request, department_id):
     }
     return render(request, 'add/delete_Dept.html', context)
 
-
-@login_required(login_url='login')
-def render_to_pdf(template_src, context_dict={}):
-	template = get_template(template_src)
-	html  = template.render(context_dict)
-	result = BytesIO()
-	pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-	if not pdf.err:
-		return HttpResponse(result.getvalue(), content_type='application/pdf')
-	return None
-
-#Opens up page as PDF
-@login_required(login_url='login')
-class ViewDeptPDF(View):
- def get(self, request, *args, **kwargs):
-    departments = Department.objects.all()
-    context  = {
-            'departments': departments,
-        }
-
-    pdf = render_to_pdf('report/print_dept.html', context )
-    return HttpResponse(pdf, content_type='application/pdf')
-
-#Automaticly downloads to PDF file
-@login_required(login_url='login')
-class DownloadDeptPDF(View):
-    def get(self, request, *args, **kwargs):
-        departments = Department.objects.all()
-        
-        context = {'departments': departments,}
-		
-        pdf = render_to_pdf('print_transaction.html', context )
-
-        response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "Invoice_%s.pdf" %("12341231")
-        content = "attachment; filename='%s'" %(filename)
-        response['Content-Disposition'] = content
-        return response
-
 @login_required(login_url='login')
 def attendanceReport(request):
     attendances = Attendance.objects.all()
-    return render(request, 'report/attendance.html', {'attendances': attendances})
+    return render(request, 'report/attendance1.html', {'attendances': attendances})
 
 def loginPage(request):
 
@@ -378,6 +306,7 @@ def userSetting(request):
 
 @login_required
 def password_reset(request):
+
     if request.method == 'POST':
         form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
@@ -389,3 +318,53 @@ def password_reset(request):
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'password_reset.html', {'form': form})
+    
+################# To automatically downling pdf reports #################
+
+def pdf_view(request):
+    attendances = Attendance.objects.all()
+    # Get the HTML of the webpage
+    html = get_template('report/attendanceReport.html').render({'attendances': attendances})
+    
+    # Create a BytesIO object to hold the PDF data
+    buffer = BytesIO()
+    
+    # Use xhtml2pdf to generate the PDF from the HTML
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), buffer)
+    
+    # Return the PDF as a response, triggering a file download
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="print_dept.pdf"'
+    return response
+
+def employee_pdf_view(request):
+    employee = Employee.objects.all()
+    # Get the HTML of the webpage
+    html = get_template('report/employeeReport.html').render({'employee': employee})
+    
+    # Create a BytesIO object to hold the PDF data
+    buffer = BytesIO()
+    
+    # Use xhtml2pdf to generate the PDF from the HTML
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), buffer)
+    
+    # Return the PDF as a response, triggering a file download
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="print_dept.pdf"'
+    return response
+
+def department_pdf_view(request):
+    department = Department.objects.all()
+    # Get the HTML of the webpage
+    html = get_template('report/departmentReport.html').render({'department': department})
+    
+    # Create a BytesIO object to hold the PDF data
+    buffer = BytesIO()
+    
+    # Use xhtml2pdf to generate the PDF from the HTML
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), buffer)
+    
+    # Return the PDF as a response, triggering a file download
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="print_dept.pdf"'
+    return response

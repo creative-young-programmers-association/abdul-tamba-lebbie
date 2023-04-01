@@ -7,7 +7,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Employee Mgt System</title>
+    {% block title %}
+
+    {% endblock %}
+    <!--<title>Employee Mgt System</title> -->
     <!-- plugins:css -->
     <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css ' %}">
@@ -208,7 +211,7 @@
      <!-- End custom js for this page -->
 
     <!-- Dataset Query -->
-
+    <!---->
     <script>
       $("#example").DataTable({
         // Datatables configuration 
@@ -246,15 +249,11 @@
             text: '<i class="fas fa-print"></i>',
             className: 'btn btn-secondary',
             titleAttr: 'Print',
-            header: function() {
-              return '<div><h1>Custom Header</h1></div>';
+            headerCallback: function(thead, data, start, end, display) {
+              // Modify the header here
+              var companyInfo = '<div><h1>Custom Header</h1></div>';
+              $(thead).prepend(companyInfo);
             },
-            customize: function ( win ) {
-              $(win.document.body).css('font-size', '10pt')
-              $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit'); 
-            }
           },
           // PDF
           {
@@ -269,30 +268,28 @@
             },
             //Font size and optimization
             customize: function (doc) {
-              //doc.styles.tableHeader.alignment = 'center'; // Header Position
-              //doc.styles.tableBodyOdd.alignment = 'center'; // Body Position
-              //doc.styles.tableBodyEven.alignment = 'center'; // Header Position
-              doc.styles.tableHeader.fontSize = 7; // Header font-size
-              doc.defaultStyle.fontSize = 6; // Body font-size
+              doc.styles.tableHeader.alignment = 'center'; // Header Position
+              doc.styles.tableBodyOdd.alignment = 'center'; // Body Position
+              doc.styles.tableBodyEven.alignment = 'center'; // Header Position
+              doc.styles.tableHeader.fontSize = 10; // Header font-size
+              doc.defaultStyle.fontSize = 8; // Body font-size
 
               // To get 100% width of the table
               doc.content[1].table.widths = Array(doc.content[1].table.body[1].length + 1).join('*').split('');
-
-              // Add custom header
-              var header = $('<div>').addClass('text-center');
-              header.append($('<img>').attr('src', 'path/to/header/logo.png').addClass('img-fluid mb-3'));
-              header.append($('<h3>').text('Custom Header').addClass('mb-0'));
-              doc.content.splice(0, 0, header.get(0));
-            } 
+            }, 
+            
           },
           // Font size (when export to print)
           
-        ]
+        ],
+
+  // ... other configurations ...
         // Disable colums with specific filter 
         //"columnDefs": [{
         //    "targets": [5,6,7,8],
         //    "orderable": false
-       // }]
+       // }],
+          
       });
 
       // Enable Searchbox Outside

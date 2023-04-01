@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
-
-from .views import  ViewDeptPDF, ViewEmployeePDF
+from .views import  pdf_view, department_pdf_view, employee_pdf_view
 
 urlpatterns = [
     path('', views.Home, name='Home'),
@@ -39,15 +38,6 @@ urlpatterns = [
 
     path('attendance_pdf_view/', views.viewAttendancePDF, name="attendance_pdf_view"),
 
-    #path('dept_pdf_view/', ViewDeptPDF.as_view(), name="dept_pdf_view"),
-    #path('download_pdf_download/', views.DownloadDeptPDF, name="download_pdf_download"),
-
-    #path('dept_pdf_view/', ViewDeptPDF.as_view(), name="dept_pdf_view"),
-    #path('download_pdf_download/', views.DownloadDeptPDF, name="download_pdf_download"),
-
-    #path('employee_pdf_view/', ViewEmployeePDF.as_view(), name="employee_pdf_view"),
-    #path('download_pdf_download/', views.DownloadEmployeePDF, name="download_pdf_download"),
-
     path('attendanceReport/', views.attendanceReport, name="attendanceReport"),
 
     path('login/', views.loginPage, name="login"),
@@ -56,6 +46,13 @@ urlpatterns = [
     path('userSetting/', views.userSetting, name="userSetting"),
 
     path('password_reset/', views.password_reset, name="password_reset"),
+
+    path('attendance1.pdf', pdf_view, name='pdf_view'),
+
+    path('employeereport.pdf', employee_pdf_view, name='employee_pdf_view'),
+    path('departmentreport.pdf', department_pdf_view, name='department_pdf_view'),
+    
+
 
 ]
 
